@@ -25,6 +25,16 @@ Realtime relay service that keeps Jira Planning Poker participants synchronized 
    npm start
    ```
 
+### Docker Compose
+
+Run the relay (and optional Redis placeholder) inside containers:
+
+```bash
+docker compose up --build relay
+```
+
+The service reads `.env` for configuration. Extend `docker-compose.yml` when you introduce Redis-backed scaling or tunneling helpers.
+
 ## Scripts
 
 - `npm run dev` – start Fastify + Socket.IO with `tsx` watcher.
@@ -33,6 +43,7 @@ Realtime relay service that keeps Jira Planning Poker participants synchronized 
 - `npm run lint` / `lint:fix` – ESLint.
 - `npm run typecheck` – strict TypeScript compile without emitting files.
 - `npm run format` / `format:fix` – Prettier.
+- `npm run token:mint` – mint a short-lived JWT for Socket.IO tests (see `docs/security/token-strategy.md`).
 
 ## Endpoint Overview
 
@@ -43,3 +54,7 @@ Realtime relay service that keeps Jira Planning Poker participants synchronized 
 | POST | `/events` | Forge backend publishes session events (requires `X-Relay-Key` or `Authorization` header). |
 
 Socket clients connect with `io(RELAY_URL, { auth: { token } })`; the relay verifies the JWT and joins the client to `sessionId` room for targeted event delivery.
+
+## Token Contract & Security
+
+`docs/security/token-strategy.md` documents claim requirements, rotation procedures, and the CLI workflow for minting test tokens. Ensure Forge and this relay share the same `JWT_SIGNING_SECRET` so handshakes succeed.

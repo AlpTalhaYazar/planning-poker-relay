@@ -14,11 +14,12 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsup",
     "start": "node ./dist/server.js",
-    "lint": "eslint \"src/**/*.{ts,tsx}\"",
-    "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
+    "lint": "eslint \"{src,scripts}/**/*.{ts,tsx}\"",
+    "lint:fix": "eslint \"{src,scripts}/**/*.{ts,tsx}\" --fix",
     "typecheck": "tsc --noEmit",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
+    "token:mint": "tsx scripts/mint-token.ts",
     "test": "npm run lint && npm run typecheck"
   },
   "keywords": [
