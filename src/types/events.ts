@@ -62,6 +62,14 @@ const participantLeftEvent = baseEnvelopeSchema.extend({
   }),
 });
 
+const sessionJoinedEvent = baseEnvelopeSchema.extend({
+  event: z.literal('session.joined'),
+  payload: z.object({
+    participantId: z.string().min(1),
+    displayName: z.string().min(1),
+  }),
+});
+
 export const relayEventEnvelopeSchema = z.discriminatedUnion('event', [
   snapshotEvent,
   voteCastEvent,
@@ -70,6 +78,7 @@ export const relayEventEnvelopeSchema = z.discriminatedUnion('event', [
   issueAdvanceEvent,
   participantJoinedEvent,
   participantLeftEvent,
+  sessionJoinedEvent,
 ]);
 
 export type RelayEventEnvelope = z.infer<typeof relayEventEnvelopeSchema>;
