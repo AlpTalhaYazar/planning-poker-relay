@@ -35,3 +35,7 @@ If you publish this package to npm/GitHub Packages, consumers can install it wit
 ```bash
 npm install @planning-poker/relay-events
 ```
+
+## CI publishing
+
+Main branch publishes `@planning-poker/relay-events` via GitHub Actions (`.github/workflows/publish-relay-events.yml`). Add `NPM_TOKEN` (publishable npm token) to repo secrets before relying on it.

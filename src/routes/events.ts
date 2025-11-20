@@ -1,6 +1,6 @@
+import { relayEventEnvelopeSchema } from '@alptalhayazar/planning-poker-relay-events';
 import type { FastifyPluginAsync } from 'fastify';
 
-import { relayEventEnvelopeSchema } from '@planning-poker/relay-events';
 import { env } from '../config/env';
 import { requireApiKey } from '../security/token';
 
