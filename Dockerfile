@@ -3,12 +3,14 @@
 FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --omit=dev
+# Skip lifecycle scripts here so postinstall doesn't run before sources are copied
+RUN npm ci --omit=dev --ignore-scripts
 
 FROM node:22-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+# Install dev deps without running postinstall until sources are present
+RUN npm ci --ignore-scripts
 COPY . .
 RUN npm run build
 
