@@ -12,10 +12,12 @@
   },
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsup",
+    "build": "npm run build:events && tsup",
+    "build:events": "cd packages/relay-events && ../../node_modules/.bin/tsup --config tsup.config.ts",
+    "postinstall": "npm run build:events",
     "start": "node ./dist/server.js",
-    "lint": "eslint \"{src,scripts}/**/*.{ts,tsx}\"",
-    "lint:fix": "eslint \"{src,scripts}/**/*.{ts,tsx}\" --fix",
+    "lint": "eslint \"{src,scripts,packages}/**/*.{ts,tsx}\"",
+    "lint:fix": "eslint \"{src,scripts,packages}/**/*.{ts,tsx}\" --fix",
     "typecheck": "tsc --noEmit",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
@@ -41,6 +43,7 @@
     "fastify": "^5.6.2",
     "fastify-plugin": "^5.1.0",
     "jose": "^6.1.2",
+    "@planning-poker/relay-events": "file:packages/relay-events",
     "socket.io": "^4.8.1",
     "zod": "^4.1.12"
   },

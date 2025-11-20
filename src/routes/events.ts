@@ -1,8 +1,8 @@
 import type { FastifyPluginAsync } from 'fastify';
 
+import { relayEventEnvelopeSchema } from '@planning-poker/relay-events';
 import { env } from '../config/env';
 import { requireApiKey } from '../security/token';
-import { relayEventEnvelopeSchema } from '../types/events';
 
 export const eventRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.post('/events', async (request, reply) => {

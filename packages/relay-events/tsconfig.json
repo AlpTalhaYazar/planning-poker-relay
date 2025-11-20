@@ -8,12 +8,13 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "dist",
+    "rootDir": "src",
     "sourceMap": true,
     "resolveJsonModule": true,
     "noEmit": false,
     "types": ["node"],
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src", "scripts", "packages"],
+  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

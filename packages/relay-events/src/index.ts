@@ -18,7 +18,7 @@ const voteCastEvent = baseEnvelopeSchema.extend({
   payload: z.object({
     issueKey: z.string().min(1),
     participantId: z.string().min(1),
-    value: z.string().min(1),
+    value: z.string().min(1).optional(),
   }),
 });
 
@@ -70,6 +70,14 @@ const sessionJoinedEvent = baseEnvelopeSchema.extend({
   }),
 });
 
+const sessionBacklogUpdatedEvent = baseEnvelopeSchema.extend({
+  event: z.literal('session.backlogUpdated'),
+  payload: z.object({
+    issueCount: z.number().int().min(0),
+    actorId: z.string().min(1),
+  }),
+});
+
 export const relayEventEnvelopeSchema = z.discriminatedUnion('event', [
   snapshotEvent,
   voteCastEvent,
@@ -79,7 +87,17 @@ export const relayEventEnvelopeSchema = z.discriminatedUnion('event', [
   participantJoinedEvent,
   participantLeftEvent,
   sessionJoinedEvent,
+  sessionBacklogUpdatedEvent,
 ]);
 
 export type RelayEventEnvelope = z.infer<typeof relayEventEnvelopeSchema>;
 export type RelayEventName = RelayEventEnvelope['event'];
+
+export type RelayEventPayload<Name extends RelayEventName = RelayEventName> = Extract<
+  RelayEventEnvelope,
+  { event: Name }
+>['payload'];
+
+export type RelayEventPayloads = {
+  [Name in RelayEventName]: RelayEventPayload<Name>;
+};

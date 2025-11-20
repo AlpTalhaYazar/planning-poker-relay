@@ -45,6 +45,14 @@ The service reads `.env` for configuration. Extend `docker-compose.yml` when you
 - `npm run format` / `format:fix` – Prettier.
 - `npm run token:mint` – mint a short-lived JWT for Socket.IO tests (see `docs/security/token-strategy.md`).
 
+## Shared Event Contracts
+
+The canonical relay event schemas now live in the reusable package `@planning-poker/relay-events` (source in `packages/relay-events`).
+
+- Install in consumers (e.g., Jira app): `npm install @planning-poker/relay-events` (or `npm install file:packages/relay-events` while developing locally).
+- Import the envelope schema and types: `import { relayEventEnvelopeSchema, type RelayEventName, type RelayEventPayload } from '@planning-poker/relay-events';`
+- Event notes: `vote.cast` payload `value` is optional (votes stay private until reveal), and `session.backlogUpdated` carries `{ issueCount: number; actorId: string }`.
+
 ## Endpoint Overview
 
 | Method | Path | Description |
