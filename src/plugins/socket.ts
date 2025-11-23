@@ -50,12 +50,40 @@ const socketPlugin: FastifyPluginAsync = fp(async (fastify) => {
       .catch((error) => next(error instanceof Error ? error : new Error('Unauthorized')));
   });
 
+  const disconnectBuffer = new Map<string, NodeJS.Timeout>();
+
   io.on('connection', (socket) => {
     const sessionId = socket.data.sessionId ?? 'unknown';
-    fastify.log.info({ sessionId, accountId: socket.data.accountId }, 'Socket connected');
+    const accountId = socket.data.accountId;
+    
+    // if (sessionId && accountId) {
+    //   const key = `${sessionId}:${accountId}`;
+    //   if (disconnectBuffer.has(key)) {
+    //     clearTimeout(disconnectBuffer.get(key));
+    //     disconnectBuffer.delete(key);
+    //     fastify.log.info({ sessionId, accountId }, 'Socket reconnected, cancelled disconnect event');
+    //   }
+    // }
+
+    fastify.log.info({ sessionId, accountId }, 'Socket connected');
 
     socket.on('disconnect', (reason) => {
       fastify.log.info({ sessionId, reason }, 'Socket disconnected');
+      if (socket.data.sessionId && socket.data.accountId) {
+        const key = `${socket.data.sessionId}:${socket.data.accountId}`;
+        // Buffer the disconnect event to allow for quick reconnects (e.g. page refresh)
+        const timeout = setTimeout(() => {
+          if (socket.data.sessionId && socket.data.accountId) {
+            socket.to(socket.data.sessionId).emit('participant.left', {
+              sessionId: socket.data.sessionId,
+              accountId: socket.data.accountId,
+              reason,
+            });
+            disconnectBuffer.delete(key);
+          }
+        }, 5000); // 5 seconds buffer
+        disconnectBuffer.set(key, timeout);
+      }
     });
   });
 

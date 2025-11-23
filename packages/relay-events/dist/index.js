@@ -68,6 +68,19 @@ var sessionBacklogUpdatedEvent = baseEnvelopeSchema.extend({
     actorId: z.string().min(1)
   })
 });
+var sessionStartedEvent = baseEnvelopeSchema.extend({
+  event: z.literal("session.started"),
+  payload: z.object({
+    actorId: z.string().min(1)
+  })
+});
+var participantReadyEvent = baseEnvelopeSchema.extend({
+  event: z.literal("participant.ready"),
+  payload: z.object({
+    participantId: z.string().min(1),
+    isReady: z.boolean()
+  })
+});
 var relayEventEnvelopeSchema = z.discriminatedUnion("event", [
   snapshotEvent,
   voteCastEvent,
@@ -77,7 +90,10 @@ var relayEventEnvelopeSchema = z.discriminatedUnion("event", [
   participantJoinedEvent,
   participantLeftEvent,
   sessionJoinedEvent,
-  sessionBacklogUpdatedEvent
+  sessionJoinedEvent,
+  sessionBacklogUpdatedEvent,
+  sessionStartedEvent,
+  participantReadyEvent
 ]);
 export {
   relayEventEnvelopeSchema

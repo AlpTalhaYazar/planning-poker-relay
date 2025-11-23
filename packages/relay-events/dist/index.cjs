@@ -92,6 +92,19 @@ var sessionBacklogUpdatedEvent = baseEnvelopeSchema.extend({
     actorId: import_zod.z.string().min(1)
   })
 });
+var sessionStartedEvent = baseEnvelopeSchema.extend({
+  event: import_zod.z.literal("session.started"),
+  payload: import_zod.z.object({
+    actorId: import_zod.z.string().min(1)
+  })
+});
+var participantReadyEvent = baseEnvelopeSchema.extend({
+  event: import_zod.z.literal("participant.ready"),
+  payload: import_zod.z.object({
+    participantId: import_zod.z.string().min(1),
+    isReady: import_zod.z.boolean()
+  })
+});
 var relayEventEnvelopeSchema = import_zod.z.discriminatedUnion("event", [
   snapshotEvent,
   voteCastEvent,
@@ -101,7 +114,10 @@ var relayEventEnvelopeSchema = import_zod.z.discriminatedUnion("event", [
   participantJoinedEvent,
   participantLeftEvent,
   sessionJoinedEvent,
-  sessionBacklogUpdatedEvent
+  sessionJoinedEvent,
+  sessionBacklogUpdatedEvent,
+  sessionStartedEvent,
+  participantReadyEvent
 ]);
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
