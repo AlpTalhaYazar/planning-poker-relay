@@ -54,13 +54,6 @@ var participantLeftEvent = baseEnvelopeSchema.extend({
     participantId: z.string().min(1)
   })
 });
-var sessionJoinedEvent = baseEnvelopeSchema.extend({
-  event: z.literal("session.joined"),
-  payload: z.object({
-    participantId: z.string().min(1),
-    displayName: z.string().min(1)
-  })
-});
 var sessionBacklogUpdatedEvent = baseEnvelopeSchema.extend({
   event: z.literal("session.backlogUpdated"),
   payload: z.object({
@@ -81,18 +74,141 @@ var participantReadyEvent = baseEnvelopeSchema.extend({
     isReady: z.boolean()
   })
 });
+var participantStatusChangedEvent = baseEnvelopeSchema.extend({
+  event: z.literal("participant.status.changed"),
+  payload: z.object({
+    participantId: z.string().min(1),
+    status: z.enum(["online", "away", "offline"])
+  })
+});
+var participantRoleChangedEvent = baseEnvelopeSchema.extend({
+  event: z.literal("participant.role.changed"),
+  payload: z.object({
+    participantId: z.string().min(1),
+    isObserver: z.boolean(),
+    isModerator: z.boolean()
+  })
+});
+var sessionPausedEvent = baseEnvelopeSchema.extend({
+  event: z.literal("session.paused"),
+  payload: z.object({
+    actorId: z.string().min(1)
+  })
+});
+var sessionResumedEvent = baseEnvelopeSchema.extend({
+  event: z.literal("session.resumed"),
+  payload: z.object({
+    actorId: z.string().min(1)
+  })
+});
+var sessionCompletedEvent = baseEnvelopeSchema.extend({
+  event: z.literal("session.completed"),
+  payload: z.object({
+    completedAt: z.string().datetime(),
+    actorId: z.string().min(1),
+    summary: z.object({
+      totalIssues: z.number(),
+      estimatedIssues: z.number(),
+      skippedIssues: z.number(),
+      duration: z.number()
+    })
+  })
+});
+var sessionSettingsUpdatedEvent = baseEnvelopeSchema.extend({
+  event: z.literal("session.settings.updated"),
+  payload: z.object({
+    actorId: z.string().min(1),
+    settings: z.object({
+      autoReveal: z.boolean().optional(),
+      allowChangeVote: z.boolean().optional(),
+      timerEnabled: z.boolean().optional(),
+      timerSeconds: z.number().optional()
+    })
+  })
+});
+var voteUpdatedEvent = baseEnvelopeSchema.extend({
+  event: z.literal("vote.updated"),
+  payload: z.object({
+    issueKey: z.string().min(1),
+    participantId: z.string().min(1),
+    previousValue: z.string().optional(),
+    newValue: z.string().optional(),
+    updatedAt: z.string().datetime()
+  })
+});
+var voteRetractedEvent = baseEnvelopeSchema.extend({
+  event: z.literal("vote.retracted"),
+  payload: z.object({
+    issueKey: z.string().min(1),
+    participantId: z.string().min(1)
+  })
+});
+var issueSkippedEvent = baseEnvelopeSchema.extend({
+  event: z.literal("issue.skipped"),
+  payload: z.object({
+    issueKey: z.string().min(1),
+    actorId: z.string().min(1),
+    reason: z.string().optional()
+  })
+});
+var consensusReachedEvent = baseEnvelopeSchema.extend({
+  event: z.literal("consensus.reached"),
+  payload: z.object({
+    issueKey: z.string().min(1),
+    consensusValue: z.string().min(1),
+    voteCounts: z.record(z.string(), z.number()),
+    consensusType: z.enum(["unanimous", "majority", "moderator-override"])
+  })
+});
+var estimateAppliedEvent = baseEnvelopeSchema.extend({
+  event: z.literal("estimate.applied"),
+  payload: z.object({
+    issueKey: z.string().min(1),
+    estimateValue: z.string().min(1),
+    appliedBy: z.string().min(1),
+    appliedAt: z.string().datetime()
+  })
+});
+var voteTimerStartedEvent = baseEnvelopeSchema.extend({
+  event: z.literal("votes.timer.started"),
+  payload: z.object({
+    issueKey: z.string().min(1),
+    actorId: z.string().min(1),
+    durationSeconds: z.number().int().positive(),
+    endsAt: z.string().datetime()
+  })
+});
+var voteTimerExpiredEvent = baseEnvelopeSchema.extend({
+  event: z.literal("votes.timer.expired"),
+  payload: z.object({
+    issueKey: z.string().min(1),
+    autoReveal: z.boolean()
+  })
+});
 var relayEventEnvelopeSchema = z.discriminatedUnion("event", [
   snapshotEvent,
   voteCastEvent,
+  voteUpdatedEvent,
+  voteRetractedEvent,
   votesClearedEvent,
   issueRevealedEvent,
   issueAdvanceEvent,
+  issueSkippedEvent,
   participantJoinedEvent,
   participantLeftEvent,
-  sessionJoinedEvent,
+  participantReadyEvent,
+  participantStatusChangedEvent,
+  participantRoleChangedEvent,
   sessionBacklogUpdatedEvent,
   sessionStartedEvent,
-  participantReadyEvent,
+  sessionPausedEvent,
+  sessionResumedEvent,
+  sessionCompletedEvent,
+  sessionSettingsUpdatedEvent,
+  consensusReachedEvent,
+  estimateAppliedEvent,
+  voteTimerStartedEvent,
+  voteTimerExpiredEvent,
   baseEnvelopeSchema.extend({
     event: z.literal("game.state"),
     payload: z.object({

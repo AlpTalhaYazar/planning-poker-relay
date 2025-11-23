@@ -73,6 +73,89 @@ declare const relayEventEnvelopeSchema: z.ZodDiscriminatedUnion<"event", [z.ZodO
     timestamp: z.ZodOptional<z.ZodString>;
     nonce: z.ZodOptional<z.ZodString>;
 } & {
+    event: z.ZodLiteral<"vote.updated">;
+    payload: z.ZodObject<{
+        issueKey: z.ZodString;
+        participantId: z.ZodString;
+        previousValue: z.ZodOptional<z.ZodString>;
+        newValue: z.ZodOptional<z.ZodString>;
+        updatedAt: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        issueKey: string;
+        participantId: string;
+        updatedAt: string;
+        previousValue?: string | undefined;
+        newValue?: string | undefined;
+    }, {
+        issueKey: string;
+        participantId: string;
+        updatedAt: string;
+        previousValue?: string | undefined;
+        newValue?: string | undefined;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    sessionId: string;
+    event: "vote.updated";
+    payload: {
+        issueKey: string;
+        participantId: string;
+        updatedAt: string;
+        previousValue?: string | undefined;
+        newValue?: string | undefined;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}, {
+    sessionId: string;
+    event: "vote.updated";
+    payload: {
+        issueKey: string;
+        participantId: string;
+        updatedAt: string;
+        previousValue?: string | undefined;
+        newValue?: string | undefined;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}>, z.ZodObject<{
+    sessionId: z.ZodString;
+    timestamp: z.ZodOptional<z.ZodString>;
+    nonce: z.ZodOptional<z.ZodString>;
+} & {
+    event: z.ZodLiteral<"vote.retracted">;
+    payload: z.ZodObject<{
+        issueKey: z.ZodString;
+        participantId: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        issueKey: string;
+        participantId: string;
+    }, {
+        issueKey: string;
+        participantId: string;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    sessionId: string;
+    event: "vote.retracted";
+    payload: {
+        issueKey: string;
+        participantId: string;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}, {
+    sessionId: string;
+    event: "vote.retracted";
+    payload: {
+        issueKey: string;
+        participantId: string;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}>, z.ZodObject<{
+    sessionId: z.ZodString;
+    timestamp: z.ZodOptional<z.ZodString>;
+    nonce: z.ZodOptional<z.ZodString>;
+} & {
     event: z.ZodLiteral<"votes.cleared">;
     payload: z.ZodObject<{
         issueKey: z.ZodString;
@@ -180,6 +263,45 @@ declare const relayEventEnvelopeSchema: z.ZodDiscriminatedUnion<"event", [z.ZodO
     timestamp: z.ZodOptional<z.ZodString>;
     nonce: z.ZodOptional<z.ZodString>;
 } & {
+    event: z.ZodLiteral<"issue.skipped">;
+    payload: z.ZodObject<{
+        issueKey: z.ZodString;
+        actorId: z.ZodString;
+        reason: z.ZodOptional<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        issueKey: string;
+        actorId: string;
+        reason?: string | undefined;
+    }, {
+        issueKey: string;
+        actorId: string;
+        reason?: string | undefined;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    sessionId: string;
+    event: "issue.skipped";
+    payload: {
+        issueKey: string;
+        actorId: string;
+        reason?: string | undefined;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}, {
+    sessionId: string;
+    event: "issue.skipped";
+    payload: {
+        issueKey: string;
+        actorId: string;
+        reason?: string | undefined;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}>, z.ZodObject<{
+    sessionId: z.ZodString;
+    timestamp: z.ZodOptional<z.ZodString>;
+    nonce: z.ZodOptional<z.ZodString>;
+} & {
     event: z.ZodLiteral<"participant.joined">;
     payload: z.ZodObject<{
         participantId: z.ZodString;
@@ -243,32 +365,105 @@ declare const relayEventEnvelopeSchema: z.ZodDiscriminatedUnion<"event", [z.ZodO
     timestamp: z.ZodOptional<z.ZodString>;
     nonce: z.ZodOptional<z.ZodString>;
 } & {
-    event: z.ZodLiteral<"session.joined">;
+    event: z.ZodLiteral<"participant.ready">;
     payload: z.ZodObject<{
         participantId: z.ZodString;
-        displayName: z.ZodString;
+        isReady: z.ZodBoolean;
     }, "strip", z.ZodTypeAny, {
         participantId: string;
-        displayName: string;
+        isReady: boolean;
     }, {
         participantId: string;
-        displayName: string;
+        isReady: boolean;
     }>;
 }, "strip", z.ZodTypeAny, {
     sessionId: string;
-    event: "session.joined";
+    event: "participant.ready";
     payload: {
         participantId: string;
-        displayName: string;
+        isReady: boolean;
     };
     timestamp?: string | undefined;
     nonce?: string | undefined;
 }, {
     sessionId: string;
-    event: "session.joined";
+    event: "participant.ready";
     payload: {
         participantId: string;
-        displayName: string;
+        isReady: boolean;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}>, z.ZodObject<{
+    sessionId: z.ZodString;
+    timestamp: z.ZodOptional<z.ZodString>;
+    nonce: z.ZodOptional<z.ZodString>;
+} & {
+    event: z.ZodLiteral<"participant.status.changed">;
+    payload: z.ZodObject<{
+        participantId: z.ZodString;
+        status: z.ZodEnum<["online", "away", "offline"]>;
+    }, "strip", z.ZodTypeAny, {
+        status: "online" | "away" | "offline";
+        participantId: string;
+    }, {
+        status: "online" | "away" | "offline";
+        participantId: string;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    sessionId: string;
+    event: "participant.status.changed";
+    payload: {
+        status: "online" | "away" | "offline";
+        participantId: string;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}, {
+    sessionId: string;
+    event: "participant.status.changed";
+    payload: {
+        status: "online" | "away" | "offline";
+        participantId: string;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}>, z.ZodObject<{
+    sessionId: z.ZodString;
+    timestamp: z.ZodOptional<z.ZodString>;
+    nonce: z.ZodOptional<z.ZodString>;
+} & {
+    event: z.ZodLiteral<"participant.role.changed">;
+    payload: z.ZodObject<{
+        participantId: z.ZodString;
+        isObserver: z.ZodBoolean;
+        isModerator: z.ZodBoolean;
+    }, "strip", z.ZodTypeAny, {
+        participantId: string;
+        isObserver: boolean;
+        isModerator: boolean;
+    }, {
+        participantId: string;
+        isObserver: boolean;
+        isModerator: boolean;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    sessionId: string;
+    event: "participant.role.changed";
+    payload: {
+        participantId: string;
+        isObserver: boolean;
+        isModerator: boolean;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}, {
+    sessionId: string;
+    event: "participant.role.changed";
+    payload: {
+        participantId: string;
+        isObserver: boolean;
+        isModerator: boolean;
     };
     timestamp?: string | undefined;
     nonce?: string | undefined;
@@ -340,32 +535,365 @@ declare const relayEventEnvelopeSchema: z.ZodDiscriminatedUnion<"event", [z.ZodO
     timestamp: z.ZodOptional<z.ZodString>;
     nonce: z.ZodOptional<z.ZodString>;
 } & {
-    event: z.ZodLiteral<"participant.ready">;
+    event: z.ZodLiteral<"session.paused">;
     payload: z.ZodObject<{
-        participantId: z.ZodString;
-        isReady: z.ZodBoolean;
+        actorId: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        participantId: string;
-        isReady: boolean;
+        actorId: string;
     }, {
-        participantId: string;
-        isReady: boolean;
+        actorId: string;
     }>;
 }, "strip", z.ZodTypeAny, {
     sessionId: string;
-    event: "participant.ready";
+    event: "session.paused";
     payload: {
-        participantId: string;
-        isReady: boolean;
+        actorId: string;
     };
     timestamp?: string | undefined;
     nonce?: string | undefined;
 }, {
     sessionId: string;
-    event: "participant.ready";
+    event: "session.paused";
     payload: {
-        participantId: string;
-        isReady: boolean;
+        actorId: string;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}>, z.ZodObject<{
+    sessionId: z.ZodString;
+    timestamp: z.ZodOptional<z.ZodString>;
+    nonce: z.ZodOptional<z.ZodString>;
+} & {
+    event: z.ZodLiteral<"session.resumed">;
+    payload: z.ZodObject<{
+        actorId: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        actorId: string;
+    }, {
+        actorId: string;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    sessionId: string;
+    event: "session.resumed";
+    payload: {
+        actorId: string;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}, {
+    sessionId: string;
+    event: "session.resumed";
+    payload: {
+        actorId: string;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}>, z.ZodObject<{
+    sessionId: z.ZodString;
+    timestamp: z.ZodOptional<z.ZodString>;
+    nonce: z.ZodOptional<z.ZodString>;
+} & {
+    event: z.ZodLiteral<"session.completed">;
+    payload: z.ZodObject<{
+        completedAt: z.ZodString;
+        actorId: z.ZodString;
+        summary: z.ZodObject<{
+            totalIssues: z.ZodNumber;
+            estimatedIssues: z.ZodNumber;
+            skippedIssues: z.ZodNumber;
+            duration: z.ZodNumber;
+        }, "strip", z.ZodTypeAny, {
+            totalIssues: number;
+            estimatedIssues: number;
+            skippedIssues: number;
+            duration: number;
+        }, {
+            totalIssues: number;
+            estimatedIssues: number;
+            skippedIssues: number;
+            duration: number;
+        }>;
+    }, "strip", z.ZodTypeAny, {
+        actorId: string;
+        completedAt: string;
+        summary: {
+            totalIssues: number;
+            estimatedIssues: number;
+            skippedIssues: number;
+            duration: number;
+        };
+    }, {
+        actorId: string;
+        completedAt: string;
+        summary: {
+            totalIssues: number;
+            estimatedIssues: number;
+            skippedIssues: number;
+            duration: number;
+        };
+    }>;
+}, "strip", z.ZodTypeAny, {
+    sessionId: string;
+    event: "session.completed";
+    payload: {
+        actorId: string;
+        completedAt: string;
+        summary: {
+            totalIssues: number;
+            estimatedIssues: number;
+            skippedIssues: number;
+            duration: number;
+        };
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}, {
+    sessionId: string;
+    event: "session.completed";
+    payload: {
+        actorId: string;
+        completedAt: string;
+        summary: {
+            totalIssues: number;
+            estimatedIssues: number;
+            skippedIssues: number;
+            duration: number;
+        };
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}>, z.ZodObject<{
+    sessionId: z.ZodString;
+    timestamp: z.ZodOptional<z.ZodString>;
+    nonce: z.ZodOptional<z.ZodString>;
+} & {
+    event: z.ZodLiteral<"session.settings.updated">;
+    payload: z.ZodObject<{
+        actorId: z.ZodString;
+        settings: z.ZodObject<{
+            autoReveal: z.ZodOptional<z.ZodBoolean>;
+            allowChangeVote: z.ZodOptional<z.ZodBoolean>;
+            timerEnabled: z.ZodOptional<z.ZodBoolean>;
+            timerSeconds: z.ZodOptional<z.ZodNumber>;
+        }, "strip", z.ZodTypeAny, {
+            autoReveal?: boolean | undefined;
+            allowChangeVote?: boolean | undefined;
+            timerEnabled?: boolean | undefined;
+            timerSeconds?: number | undefined;
+        }, {
+            autoReveal?: boolean | undefined;
+            allowChangeVote?: boolean | undefined;
+            timerEnabled?: boolean | undefined;
+            timerSeconds?: number | undefined;
+        }>;
+    }, "strip", z.ZodTypeAny, {
+        actorId: string;
+        settings: {
+            autoReveal?: boolean | undefined;
+            allowChangeVote?: boolean | undefined;
+            timerEnabled?: boolean | undefined;
+            timerSeconds?: number | undefined;
+        };
+    }, {
+        actorId: string;
+        settings: {
+            autoReveal?: boolean | undefined;
+            allowChangeVote?: boolean | undefined;
+            timerEnabled?: boolean | undefined;
+            timerSeconds?: number | undefined;
+        };
+    }>;
+}, "strip", z.ZodTypeAny, {
+    sessionId: string;
+    event: "session.settings.updated";
+    payload: {
+        actorId: string;
+        settings: {
+            autoReveal?: boolean | undefined;
+            allowChangeVote?: boolean | undefined;
+            timerEnabled?: boolean | undefined;
+            timerSeconds?: number | undefined;
+        };
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}, {
+    sessionId: string;
+    event: "session.settings.updated";
+    payload: {
+        actorId: string;
+        settings: {
+            autoReveal?: boolean | undefined;
+            allowChangeVote?: boolean | undefined;
+            timerEnabled?: boolean | undefined;
+            timerSeconds?: number | undefined;
+        };
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}>, z.ZodObject<{
+    sessionId: z.ZodString;
+    timestamp: z.ZodOptional<z.ZodString>;
+    nonce: z.ZodOptional<z.ZodString>;
+} & {
+    event: z.ZodLiteral<"consensus.reached">;
+    payload: z.ZodObject<{
+        issueKey: z.ZodString;
+        consensusValue: z.ZodString;
+        voteCounts: z.ZodRecord<z.ZodString, z.ZodNumber>;
+        consensusType: z.ZodEnum<["unanimous", "majority", "moderator-override"]>;
+    }, "strip", z.ZodTypeAny, {
+        issueKey: string;
+        consensusValue: string;
+        voteCounts: Record<string, number>;
+        consensusType: "unanimous" | "majority" | "moderator-override";
+    }, {
+        issueKey: string;
+        consensusValue: string;
+        voteCounts: Record<string, number>;
+        consensusType: "unanimous" | "majority" | "moderator-override";
+    }>;
+}, "strip", z.ZodTypeAny, {
+    sessionId: string;
+    event: "consensus.reached";
+    payload: {
+        issueKey: string;
+        consensusValue: string;
+        voteCounts: Record<string, number>;
+        consensusType: "unanimous" | "majority" | "moderator-override";
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}, {
+    sessionId: string;
+    event: "consensus.reached";
+    payload: {
+        issueKey: string;
+        consensusValue: string;
+        voteCounts: Record<string, number>;
+        consensusType: "unanimous" | "majority" | "moderator-override";
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}>, z.ZodObject<{
+    sessionId: z.ZodString;
+    timestamp: z.ZodOptional<z.ZodString>;
+    nonce: z.ZodOptional<z.ZodString>;
+} & {
+    event: z.ZodLiteral<"estimate.applied">;
+    payload: z.ZodObject<{
+        issueKey: z.ZodString;
+        estimateValue: z.ZodString;
+        appliedBy: z.ZodString;
+        appliedAt: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        issueKey: string;
+        estimateValue: string;
+        appliedBy: string;
+        appliedAt: string;
+    }, {
+        issueKey: string;
+        estimateValue: string;
+        appliedBy: string;
+        appliedAt: string;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    sessionId: string;
+    event: "estimate.applied";
+    payload: {
+        issueKey: string;
+        estimateValue: string;
+        appliedBy: string;
+        appliedAt: string;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}, {
+    sessionId: string;
+    event: "estimate.applied";
+    payload: {
+        issueKey: string;
+        estimateValue: string;
+        appliedBy: string;
+        appliedAt: string;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}>, z.ZodObject<{
+    sessionId: z.ZodString;
+    timestamp: z.ZodOptional<z.ZodString>;
+    nonce: z.ZodOptional<z.ZodString>;
+} & {
+    event: z.ZodLiteral<"votes.timer.started">;
+    payload: z.ZodObject<{
+        issueKey: z.ZodString;
+        actorId: z.ZodString;
+        durationSeconds: z.ZodNumber;
+        endsAt: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        issueKey: string;
+        actorId: string;
+        durationSeconds: number;
+        endsAt: string;
+    }, {
+        issueKey: string;
+        actorId: string;
+        durationSeconds: number;
+        endsAt: string;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    sessionId: string;
+    event: "votes.timer.started";
+    payload: {
+        issueKey: string;
+        actorId: string;
+        durationSeconds: number;
+        endsAt: string;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}, {
+    sessionId: string;
+    event: "votes.timer.started";
+    payload: {
+        issueKey: string;
+        actorId: string;
+        durationSeconds: number;
+        endsAt: string;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}>, z.ZodObject<{
+    sessionId: z.ZodString;
+    timestamp: z.ZodOptional<z.ZodString>;
+    nonce: z.ZodOptional<z.ZodString>;
+} & {
+    event: z.ZodLiteral<"votes.timer.expired">;
+    payload: z.ZodObject<{
+        issueKey: z.ZodString;
+        autoReveal: z.ZodBoolean;
+    }, "strip", z.ZodTypeAny, {
+        issueKey: string;
+        autoReveal: boolean;
+    }, {
+        issueKey: string;
+        autoReveal: boolean;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    sessionId: string;
+    event: "votes.timer.expired";
+    payload: {
+        issueKey: string;
+        autoReveal: boolean;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}, {
+    sessionId: string;
+    event: "votes.timer.expired";
+    payload: {
+        issueKey: string;
+        autoReveal: boolean;
     };
     timestamp?: string | undefined;
     nonce?: string | undefined;

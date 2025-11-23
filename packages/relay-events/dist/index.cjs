@@ -78,13 +78,6 @@ var participantLeftEvent = baseEnvelopeSchema.extend({
     participantId: import_zod.z.string().min(1)
   })
 });
-var sessionJoinedEvent = baseEnvelopeSchema.extend({
-  event: import_zod.z.literal("session.joined"),
-  payload: import_zod.z.object({
-    participantId: import_zod.z.string().min(1),
-    displayName: import_zod.z.string().min(1)
-  })
-});
 var sessionBacklogUpdatedEvent = baseEnvelopeSchema.extend({
   event: import_zod.z.literal("session.backlogUpdated"),
   payload: import_zod.z.object({
@@ -105,18 +98,141 @@ var participantReadyEvent = baseEnvelopeSchema.extend({
     isReady: import_zod.z.boolean()
   })
 });
+var participantStatusChangedEvent = baseEnvelopeSchema.extend({
+  event: import_zod.z.literal("participant.status.changed"),
+  payload: import_zod.z.object({
+    participantId: import_zod.z.string().min(1),
+    status: import_zod.z.enum(["online", "away", "offline"])
+  })
+});
+var participantRoleChangedEvent = baseEnvelopeSchema.extend({
+  event: import_zod.z.literal("participant.role.changed"),
+  payload: import_zod.z.object({
+    participantId: import_zod.z.string().min(1),
+    isObserver: import_zod.z.boolean(),
+    isModerator: import_zod.z.boolean()
+  })
+});
+var sessionPausedEvent = baseEnvelopeSchema.extend({
+  event: import_zod.z.literal("session.paused"),
+  payload: import_zod.z.object({
+    actorId: import_zod.z.string().min(1)
+  })
+});
+var sessionResumedEvent = baseEnvelopeSchema.extend({
+  event: import_zod.z.literal("session.resumed"),
+  payload: import_zod.z.object({
+    actorId: import_zod.z.string().min(1)
+  })
+});
+var sessionCompletedEvent = baseEnvelopeSchema.extend({
+  event: import_zod.z.literal("session.completed"),
+  payload: import_zod.z.object({
+    completedAt: import_zod.z.string().datetime(),
+    actorId: import_zod.z.string().min(1),
+    summary: import_zod.z.object({
+      totalIssues: import_zod.z.number(),
+      estimatedIssues: import_zod.z.number(),
+      skippedIssues: import_zod.z.number(),
+      duration: import_zod.z.number()
+    })
+  })
+});
+var sessionSettingsUpdatedEvent = baseEnvelopeSchema.extend({
+  event: import_zod.z.literal("session.settings.updated"),
+  payload: import_zod.z.object({
+    actorId: import_zod.z.string().min(1),
+    settings: import_zod.z.object({
+      autoReveal: import_zod.z.boolean().optional(),
+      allowChangeVote: import_zod.z.boolean().optional(),
+      timerEnabled: import_zod.z.boolean().optional(),
+      timerSeconds: import_zod.z.number().optional()
+    })
+  })
+});
+var voteUpdatedEvent = baseEnvelopeSchema.extend({
+  event: import_zod.z.literal("vote.updated"),
+  payload: import_zod.z.object({
+    issueKey: import_zod.z.string().min(1),
+    participantId: import_zod.z.string().min(1),
+    previousValue: import_zod.z.string().optional(),
+    newValue: import_zod.z.string().optional(),
+    updatedAt: import_zod.z.string().datetime()
+  })
+});
+var voteRetractedEvent = baseEnvelopeSchema.extend({
+  event: import_zod.z.literal("vote.retracted"),
+  payload: import_zod.z.object({
+    issueKey: import_zod.z.string().min(1),
+    participantId: import_zod.z.string().min(1)
+  })
+});
+var issueSkippedEvent = baseEnvelopeSchema.extend({
+  event: import_zod.z.literal("issue.skipped"),
+  payload: import_zod.z.object({
+    issueKey: import_zod.z.string().min(1),
+    actorId: import_zod.z.string().min(1),
+    reason: import_zod.z.string().optional()
+  })
+});
+var consensusReachedEvent = baseEnvelopeSchema.extend({
+  event: import_zod.z.literal("consensus.reached"),
+  payload: import_zod.z.object({
+    issueKey: import_zod.z.string().min(1),
+    consensusValue: import_zod.z.string().min(1),
+    voteCounts: import_zod.z.record(import_zod.z.string(), import_zod.z.number()),
+    consensusType: import_zod.z.enum(["unanimous", "majority", "moderator-override"])
+  })
+});
+var estimateAppliedEvent = baseEnvelopeSchema.extend({
+  event: import_zod.z.literal("estimate.applied"),
+  payload: import_zod.z.object({
+    issueKey: import_zod.z.string().min(1),
+    estimateValue: import_zod.z.string().min(1),
+    appliedBy: import_zod.z.string().min(1),
+    appliedAt: import_zod.z.string().datetime()
+  })
+});
+var voteTimerStartedEvent = baseEnvelopeSchema.extend({
+  event: import_zod.z.literal("votes.timer.started"),
+  payload: import_zod.z.object({
+    issueKey: import_zod.z.string().min(1),
+    actorId: import_zod.z.string().min(1),
+    durationSeconds: import_zod.z.number().int().positive(),
+    endsAt: import_zod.z.string().datetime()
+  })
+});
+var voteTimerExpiredEvent = baseEnvelopeSchema.extend({
+  event: import_zod.z.literal("votes.timer.expired"),
+  payload: import_zod.z.object({
+    issueKey: import_zod.z.string().min(1),
+    autoReveal: import_zod.z.boolean()
+  })
+});
 var relayEventEnvelopeSchema = import_zod.z.discriminatedUnion("event", [
   snapshotEvent,
   voteCastEvent,
+  voteUpdatedEvent,
+  voteRetractedEvent,
   votesClearedEvent,
   issueRevealedEvent,
   issueAdvanceEvent,
+  issueSkippedEvent,
   participantJoinedEvent,
   participantLeftEvent,
-  sessionJoinedEvent,
+  participantReadyEvent,
+  participantStatusChangedEvent,
+  participantRoleChangedEvent,
   sessionBacklogUpdatedEvent,
   sessionStartedEvent,
-  participantReadyEvent,
+  sessionPausedEvent,
+  sessionResumedEvent,
+  sessionCompletedEvent,
+  sessionSettingsUpdatedEvent,
+  consensusReachedEvent,
+  estimateAppliedEvent,
+  voteTimerStartedEvent,
+  voteTimerExpiredEvent,
   baseEnvelopeSchema.extend({
     event: import_zod.z.literal("game.state"),
     payload: import_zod.z.object({
