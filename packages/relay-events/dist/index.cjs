@@ -116,7 +116,47 @@ var relayEventEnvelopeSchema = import_zod.z.discriminatedUnion("event", [
   sessionJoinedEvent,
   sessionBacklogUpdatedEvent,
   sessionStartedEvent,
-  participantReadyEvent
+  participantReadyEvent,
+  baseEnvelopeSchema.extend({
+    event: import_zod.z.literal("game.state"),
+    payload: import_zod.z.object({
+      bugs: import_zod.z.array(import_zod.z.object({
+        id: import_zod.z.number(),
+        x: import_zod.z.number(),
+        y: import_zod.z.number(),
+        type: import_zod.z.enum(["bug", "feature"]),
+        createdAt: import_zod.z.number()
+      })),
+      scores: import_zod.z.record(import_zod.z.string(), import_zod.z.number()),
+      timeLeft: import_zod.z.number()
+    })
+  }),
+  baseEnvelopeSchema.extend({
+    event: import_zod.z.literal("game.spawn"),
+    payload: import_zod.z.object({
+      bug: import_zod.z.object({
+        id: import_zod.z.number(),
+        x: import_zod.z.number(),
+        y: import_zod.z.number(),
+        type: import_zod.z.enum(["bug", "feature"]),
+        createdAt: import_zod.z.number()
+      })
+    })
+  }),
+  baseEnvelopeSchema.extend({
+    event: import_zod.z.literal("game.smashed"),
+    payload: import_zod.z.object({
+      bugId: import_zod.z.number(),
+      actorId: import_zod.z.string(),
+      newScore: import_zod.z.number()
+    })
+  }),
+  baseEnvelopeSchema.extend({
+    event: import_zod.z.literal("game.start"),
+    payload: import_zod.z.object({
+      sessionId: import_zod.z.string()
+    })
+  })
 ]);
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

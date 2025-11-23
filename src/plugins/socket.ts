@@ -4,6 +4,7 @@ import { Server as SocketIOServer } from 'socket.io';
 
 import { env } from '../config/env';
 import { verifySocketToken } from '../security/token';
+import { GameManager } from '../GameManager';
 
 declare module 'fastify' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -52,6 +53,9 @@ const socketPlugin: FastifyPluginAsync = fp(async (fastify) => {
 
   const disconnectBuffer = new Map<string, NodeJS.Timeout>();
 
+  const gameManager = new GameManager(io);
+  fastify.decorate('gameManager', gameManager);
+
   io.on('connection', (socket) => {
     const sessionId = socket.data.sessionId ?? 'unknown';
     const accountId = socket.data.accountId;
@@ -66,6 +70,32 @@ const socketPlugin: FastifyPluginAsync = fp(async (fastify) => {
     // }
 
     fastify.log.info({ sessionId, accountId }, 'Socket connected');
+
+    // Send current game state on join
+    const state = gameManager.getState(sessionId);
+    if (state && state.isActive) {
+      socket.emit('game.state', {
+        event: 'game.state',
+        sessionId,
+        payload: {
+          bugs: state.bugs,
+          scores: state.scores,
+          timeLeft: state.timeLeft,
+        },
+      });
+    }
+
+    socket.on('game.start', () => {
+      if (sessionId) {
+        gameManager.startGame(sessionId);
+      }
+    });
+
+    socket.on('game.smash', (data: { bugId: number }) => {
+      if (sessionId && accountId) {
+        gameManager.handleSmash(sessionId, data.bugId, accountId);
+      }
+    });
 
     socket.on('disconnect', (reason) => {
       fastify.log.info({ sessionId, reason }, 'Socket disconnected');

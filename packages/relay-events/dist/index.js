@@ -92,7 +92,47 @@ var relayEventEnvelopeSchema = z.discriminatedUnion("event", [
   sessionJoinedEvent,
   sessionBacklogUpdatedEvent,
   sessionStartedEvent,
-  participantReadyEvent
+  participantReadyEvent,
+  baseEnvelopeSchema.extend({
+    event: z.literal("game.state"),
+    payload: z.object({
+      bugs: z.array(z.object({
+        id: z.number(),
+        x: z.number(),
+        y: z.number(),
+        type: z.enum(["bug", "feature"]),
+        createdAt: z.number()
+      })),
+      scores: z.record(z.string(), z.number()),
+      timeLeft: z.number()
+    })
+  }),
+  baseEnvelopeSchema.extend({
+    event: z.literal("game.spawn"),
+    payload: z.object({
+      bug: z.object({
+        id: z.number(),
+        x: z.number(),
+        y: z.number(),
+        type: z.enum(["bug", "feature"]),
+        createdAt: z.number()
+      })
+    })
+  }),
+  baseEnvelopeSchema.extend({
+    event: z.literal("game.smashed"),
+    payload: z.object({
+      bugId: z.number(),
+      actorId: z.string(),
+      newScore: z.number()
+    })
+  }),
+  baseEnvelopeSchema.extend({
+    event: z.literal("game.start"),
+    payload: z.object({
+      sessionId: z.string()
+    })
+  })
 ]);
 export {
   relayEventEnvelopeSchema

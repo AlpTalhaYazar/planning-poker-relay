@@ -369,6 +369,226 @@ declare const relayEventEnvelopeSchema: z.ZodDiscriminatedUnion<"event", [z.ZodO
     };
     timestamp?: string | undefined;
     nonce?: string | undefined;
+}>, z.ZodObject<{
+    sessionId: z.ZodString;
+    timestamp: z.ZodOptional<z.ZodString>;
+    nonce: z.ZodOptional<z.ZodString>;
+} & {
+    event: z.ZodLiteral<"game.state">;
+    payload: z.ZodObject<{
+        bugs: z.ZodArray<z.ZodObject<{
+            id: z.ZodNumber;
+            x: z.ZodNumber;
+            y: z.ZodNumber;
+            type: z.ZodEnum<["bug", "feature"]>;
+            createdAt: z.ZodNumber;
+        }, "strip", z.ZodTypeAny, {
+            type: "bug" | "feature";
+            id: number;
+            x: number;
+            y: number;
+            createdAt: number;
+        }, {
+            type: "bug" | "feature";
+            id: number;
+            x: number;
+            y: number;
+            createdAt: number;
+        }>, "many">;
+        scores: z.ZodRecord<z.ZodString, z.ZodNumber>;
+        timeLeft: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        bugs: {
+            type: "bug" | "feature";
+            id: number;
+            x: number;
+            y: number;
+            createdAt: number;
+        }[];
+        scores: Record<string, number>;
+        timeLeft: number;
+    }, {
+        bugs: {
+            type: "bug" | "feature";
+            id: number;
+            x: number;
+            y: number;
+            createdAt: number;
+        }[];
+        scores: Record<string, number>;
+        timeLeft: number;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    sessionId: string;
+    event: "game.state";
+    payload: {
+        bugs: {
+            type: "bug" | "feature";
+            id: number;
+            x: number;
+            y: number;
+            createdAt: number;
+        }[];
+        scores: Record<string, number>;
+        timeLeft: number;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}, {
+    sessionId: string;
+    event: "game.state";
+    payload: {
+        bugs: {
+            type: "bug" | "feature";
+            id: number;
+            x: number;
+            y: number;
+            createdAt: number;
+        }[];
+        scores: Record<string, number>;
+        timeLeft: number;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}>, z.ZodObject<{
+    sessionId: z.ZodString;
+    timestamp: z.ZodOptional<z.ZodString>;
+    nonce: z.ZodOptional<z.ZodString>;
+} & {
+    event: z.ZodLiteral<"game.spawn">;
+    payload: z.ZodObject<{
+        bug: z.ZodObject<{
+            id: z.ZodNumber;
+            x: z.ZodNumber;
+            y: z.ZodNumber;
+            type: z.ZodEnum<["bug", "feature"]>;
+            createdAt: z.ZodNumber;
+        }, "strip", z.ZodTypeAny, {
+            type: "bug" | "feature";
+            id: number;
+            x: number;
+            y: number;
+            createdAt: number;
+        }, {
+            type: "bug" | "feature";
+            id: number;
+            x: number;
+            y: number;
+            createdAt: number;
+        }>;
+    }, "strip", z.ZodTypeAny, {
+        bug: {
+            type: "bug" | "feature";
+            id: number;
+            x: number;
+            y: number;
+            createdAt: number;
+        };
+    }, {
+        bug: {
+            type: "bug" | "feature";
+            id: number;
+            x: number;
+            y: number;
+            createdAt: number;
+        };
+    }>;
+}, "strip", z.ZodTypeAny, {
+    sessionId: string;
+    event: "game.spawn";
+    payload: {
+        bug: {
+            type: "bug" | "feature";
+            id: number;
+            x: number;
+            y: number;
+            createdAt: number;
+        };
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}, {
+    sessionId: string;
+    event: "game.spawn";
+    payload: {
+        bug: {
+            type: "bug" | "feature";
+            id: number;
+            x: number;
+            y: number;
+            createdAt: number;
+        };
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}>, z.ZodObject<{
+    sessionId: z.ZodString;
+    timestamp: z.ZodOptional<z.ZodString>;
+    nonce: z.ZodOptional<z.ZodString>;
+} & {
+    event: z.ZodLiteral<"game.smashed">;
+    payload: z.ZodObject<{
+        bugId: z.ZodNumber;
+        actorId: z.ZodString;
+        newScore: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        actorId: string;
+        bugId: number;
+        newScore: number;
+    }, {
+        actorId: string;
+        bugId: number;
+        newScore: number;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    sessionId: string;
+    event: "game.smashed";
+    payload: {
+        actorId: string;
+        bugId: number;
+        newScore: number;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}, {
+    sessionId: string;
+    event: "game.smashed";
+    payload: {
+        actorId: string;
+        bugId: number;
+        newScore: number;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}>, z.ZodObject<{
+    sessionId: z.ZodString;
+    timestamp: z.ZodOptional<z.ZodString>;
+    nonce: z.ZodOptional<z.ZodString>;
+} & {
+    event: z.ZodLiteral<"game.start">;
+    payload: z.ZodObject<{
+        sessionId: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        sessionId: string;
+    }, {
+        sessionId: string;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    sessionId: string;
+    event: "game.start";
+    payload: {
+        sessionId: string;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
+}, {
+    sessionId: string;
+    event: "game.start";
+    payload: {
+        sessionId: string;
+    };
+    timestamp?: string | undefined;
+    nonce?: string | undefined;
 }>]>;
 type RelayEventEnvelope = z.infer<typeof relayEventEnvelopeSchema>;
 type RelayEventName = RelayEventEnvelope['event'];
