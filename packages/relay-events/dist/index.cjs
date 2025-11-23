@@ -114,7 +114,6 @@ var relayEventEnvelopeSchema = import_zod.z.discriminatedUnion("event", [
   participantJoinedEvent,
   participantLeftEvent,
   sessionJoinedEvent,
-  sessionJoinedEvent,
   sessionBacklogUpdatedEvent,
   sessionStartedEvent,
   participantReadyEvent

@@ -277,40 +277,6 @@ declare const relayEventEnvelopeSchema: z.ZodDiscriminatedUnion<"event", [z.ZodO
     timestamp: z.ZodOptional<z.ZodString>;
     nonce: z.ZodOptional<z.ZodString>;
 } & {
-    event: z.ZodLiteral<"session.joined">;
-    payload: z.ZodObject<{
-        participantId: z.ZodString;
-        displayName: z.ZodString;
-    }, "strip", z.ZodTypeAny, {
-        participantId: string;
-        displayName: string;
-    }, {
-        participantId: string;
-        displayName: string;
-    }>;
-}, "strip", z.ZodTypeAny, {
-    sessionId: string;
-    event: "session.joined";
-    payload: {
-        participantId: string;
-        displayName: string;
-    };
-    timestamp?: string | undefined;
-    nonce?: string | undefined;
-}, {
-    sessionId: string;
-    event: "session.joined";
-    payload: {
-        participantId: string;
-        displayName: string;
-    };
-    timestamp?: string | undefined;
-    nonce?: string | undefined;
-}>, z.ZodObject<{
-    sessionId: z.ZodString;
-    timestamp: z.ZodOptional<z.ZodString>;
-    nonce: z.ZodOptional<z.ZodString>;
-} & {
     event: z.ZodLiteral<"session.backlogUpdated">;
     payload: z.ZodObject<{
         issueCount: z.ZodNumber;

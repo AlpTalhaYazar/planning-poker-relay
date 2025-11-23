@@ -90,7 +90,6 @@ var relayEventEnvelopeSchema = z.discriminatedUnion("event", [
   participantJoinedEvent,
   participantLeftEvent,
   sessionJoinedEvent,
-  sessionJoinedEvent,
   sessionBacklogUpdatedEvent,
   sessionStartedEvent,
   participantReadyEvent
