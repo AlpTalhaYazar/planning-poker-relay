@@ -1,6 +1,6 @@
 {
   "name": "@alptalhayazar/planning-poker-relay-events",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Shared event contracts for the Planning Poker relay and integrations.",
   "type": "module",
   "main": "./dist/index.js",
@@ -29,6 +29,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/node": "^24.10.1",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3"
   }
